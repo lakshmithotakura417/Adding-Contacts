@@ -1,12 +1,13 @@
 import logo from './logo.svg';
 import './App.css';
 import Nav from './Components/Nav';
+import Contacts from './Components/Contacts';
 
 function App() {
   return (
-    <div className="App">
+    <div >
       <Nav/>
-       Contacts
+    <Contacts/>
     </div>
   );
 }
