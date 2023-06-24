@@ -4,3 +4,10 @@ return {
 }
 }
 export default GetAllContacts;
+export const AddContacts=(contacts)=>{
+    return {
+        type:"ADD_CONTACTS",
+        payload:contacts
+    }
+    }
+  
