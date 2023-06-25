@@ -1,19 +1,27 @@
 import React,{useEffect} from 'react';
 import { connect } from 'react-redux';
-import GetAllContacts from '../Redux/Action';
+import GetAllContacts, { getSingleContact ,DeleteContactsList} from '../Redux/Action';
 import EditContacts from './EditContacts';
-const Contacts=({contacts,getAllContacts})=>{
+const Contacts=({contacts,getAllContacts,getSingleContact,contact,deleteContact})=>{
     useEffect(()=>{
         getAllContacts()
-    },[])
+    },[]);
+    const deleteHandler=(index)=>{
+      const confirm=window.confirm("are you shure to delete this contact");
+      if(confirm){
+        
+        deleteContact(index)
+      }
+    }
 return(
 <>
   <div className='container d-flex flex-row justify-content-between mt-3'>
         <h1>contacts</h1>
-        <button type="button" className='btn btn-primary'>+Edit Contacts</button>
+        <button type="button" className='btn btn-primary' data-toggle="modal" data-target="#exampleModalCenter">+Edit Contacts</button>
   </div>
   <div className='container'>
-    <table className="table">
+    {contacts.length ===0 && <h2 className="text-danger text-center">no contacts found</h2>}
+    {contacts.length >0 &&<table className="table">
       <thead>
         <tr>
           <th >Id</th>
@@ -24,28 +32,28 @@ return(
         </tr>
       </thead>
       <tbody>
-          {contacts.length>0 && contacts.map((contact,index)=>{
+          {contacts.map((contact,index)=>{
             return <>
-            <tr>
-              <th >{index+1}</th>
-              <td>{contact.fname}</td>
-              <td>{contact.phone}</td>
-              <td>{contact.email}</td>
-              <td>
-                <button type='button' className='btn btn-primary' data-toggle="modal" data-target="#exampleModalCenter">Edit</button>&nbsp;
-                <button type="button" className='btn btn-danger'>Delete</button>
-              </td>
-            </tr>
+              <tr key={index}>
+                <th >{index+1}</th>
+                <td>{contact.fname}</td>
+                <td>{contact.phone}</td>
+                <td>{contact.email}</td>
+                <td>
+                  <button type='button' className='btn btn-primary'data-toggle="modal" data-target="#exampleModalCenter" onClick={()=>getSingleContact(index)}>Edit</button>&nbsp;
+                  <button type="button" className='btn btn-danger' onClick={()=>deleteHandler(index)}>Delete</button>
+                </td>
+              </tr>
             
             </>
           })} 
       </tbody>
-    </table>
+    </table>}
   </div>
   
   <div className="modal fade" id="exampleModalCenter" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div className="modal-dialog modal-dialog-centered" role="document">
-      <EditContacts/>
+      <EditContacts editContact={contact}/>
     </div>
   </div>
 </>
@@ -53,12 +61,15 @@ return(
 }
 const mapStateToProps=(state)=>{
 return {
-  contacts:state.contacts
+  contacts:state.contacts,
+  contact:state.contact
 }
 }
 const mapDispatchToProps=(dispatch)=>{
   return{
-    getAllContacts:()=>dispatch(GetAllContacts())
+    getAllContacts:()=>dispatch(GetAllContacts()),
+    getSingleContact:(index)=>dispatch(getSingleContact(index)),
+    deleteContact:(index)=>dispatch(DeleteContactsList(index))
   }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(Contacts);

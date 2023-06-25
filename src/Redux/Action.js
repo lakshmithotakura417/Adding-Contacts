@@ -10,4 +10,20 @@ export const AddContacts=(contacts)=>{
         payload:contacts
     }
     }
-  
+export const EditContactsList=(contacts,id)=>{
+    return{
+        type:"EDIT_CONTACTS",
+        payload:contacts,id
+    }
+} 
+export const DeleteContactsList=(id)=>{
+    return{
+        type:"DELETE_CONTACTS",id
+    }
+}
+export const getSingleContact=(index)=>{
+return {
+    type:"GET_SINGLE_CONTACT",
+    index,
+}
+}

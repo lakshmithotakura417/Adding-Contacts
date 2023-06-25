@@ -1,19 +1,28 @@
-import React ,{useState,useRef}from 'react'
-import GetAllContacts, { AddContacts } from '../Redux/Action';
+import React ,{useState,useRef,useEffect}from 'react'
+import  { AddContacts, EditContactsList } from '../Redux/Action';
 import {connect} from 'react-redux'
-function EditContacts({addContacts}) {
+function EditContacts({addContacts,editContact,editContacts}) {
+  const closeRef=useRef();
   const [contacts,setContacts]=useState({
     fname:"",
     phone:"",
     email:""
   });
   const {fname,phone,email}=contacts;
+  useEffect(()=>{
+    setContacts(editContact)
+    },[editContact])
+
   const changeHandler=(e)=>{
-    setContacts({...contacts,[e.target.name]:[e.target.value]})
+    setContacts({...contacts,[e.target.name]:e.target.value})
   }
-  
+
  const handleClick=()=>{
+  if(contacts.id !==null && contacts.id !== undefined){
+    editContacts(contacts,contacts.id)
+  }else{
   addContacts(contacts);
+  }
   setContacts({
     fname:"",
     phone:"",
@@ -21,7 +30,7 @@ function EditContacts({addContacts}) {
   })
   closeRef.current.click();
  }
- const closeRef=useRef();
+
   return (
    <>
        <div className="modal-content">
@@ -63,8 +72,9 @@ return {
 }
 const mapDispatchToProps=(dispatch)=>{
 return{
-  getAllContacts:()=>dispatch(GetAllContacts),
-  addContacts:(contacts)=>dispatch(AddContacts(contacts))
+  //getAllContacts:()=>dispatch(GetAllContacts),
+  addContacts:(contacts)=>dispatch(AddContacts(contacts)),
+  editContacts:(contacts,id)=>dispatch(EditContactsList(contacts,id))
 }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(EditContacts) 
